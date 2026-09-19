@@ -1,0 +1,5 @@
+# Development-only files, left out of release zips (git archive).
+.gitattributes export-ignore
+.gitignore export-ignore
+stylua.toml export-ignore
+scripts export-ignore

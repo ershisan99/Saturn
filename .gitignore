@@ -4,3 +4,6 @@ Testing
 core/config/settings.lua
 
 .vscode
+
+# release zips built by scripts/release.ps1
+dist
