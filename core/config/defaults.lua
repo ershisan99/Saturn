@@ -18,6 +18,10 @@ return {
   enable_dramatic_final_hand = false,
   enable_animation_skip_pause = false,
 
+  -- Keyboard shortcuts (LOVE key names, e.g. "f5", "n", "kp1" -> "1")
+  keybind_anim = "a",
+  keybind_pause = "d",
+
   -- stacking
   enable_stacking = false,
 

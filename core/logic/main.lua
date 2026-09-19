@@ -175,6 +175,7 @@ function Saturn.loadLogic()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/rem_anim.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/stack.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/hide_played.lua")))()
+  assert(load(nfs.read(Saturn.PATH .. "/core/logic/keybinds.lua")))()
   -- UI
   assert(load(nfs.read(Saturn.PATH .. "/UI/definitions.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/UI/functions.lua")))()
@@ -200,6 +201,21 @@ end
 function Saturn.initialize()
   Saturn.getDefaults()
   Saturn.loadConfig()
+  -- Backfill options added after the user's config was first written
+  for k, v in pairs(Saturn.DEFAULTS or {}) do
+    if Saturn.config[k] == nil then
+      Saturn.config[k] = v
+    end
+  end
+  -- Drop the pre-release on/off key pairs; each setting now has one toggle key.
+  for _, k in ipairs({
+    "keybind_anim_on",
+    "keybind_anim_off",
+    "keybind_pause_on",
+    "keybind_pause_off",
+  }) do
+    Saturn.config[k] = nil
+  end
   Saturn.loadLogic()
 end
 
