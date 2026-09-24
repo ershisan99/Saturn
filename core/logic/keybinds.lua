@@ -2,7 +2,8 @@
 -- always-visible status strip in the left margin with hover tooltips.
 -- Another mod can move the strip by setting Saturn.status_ui_dock to one of
 -- its UIBoxes before the run starts (or calling Saturn.create_status_ui()
--- after). The strip then sits in a row centred above that box.
+-- after). The strip then sits in a row above that box, flush with its right
+-- edge.
 -- Hooks Controller:key_press_update the same way Fantoms Preview does.
 -- Key names follow LOVE key constants (e.g. "a", "n", "kp1" -> "1").
 
@@ -127,8 +128,8 @@ function Saturn.create_status_ui()
       nodes = cells,
     },
     config = dock and {
-      align = "tm",
-      offset = { x = 0, y = -0.05 },
+      align = "tri",
+      offset = { x = 0, y = 0 },
       major = dock,
     } or {
       -- Vertically centred, in the margin between the window edge and the HUD.
@@ -138,6 +139,13 @@ function Saturn.create_status_ui()
       bond = "Weak",
     },
   })
+  if dock then
+    -- "tri" lines up the tops (i applies to both edges), so lift the strip
+    -- by its own height, now that it's known.
+    Saturn.status_ui:set_alignment({
+      offset = { x = 0, y = -Saturn.status_ui.T.h - 0.05 },
+    })
+  end
 end
 
 local start_run_ref = Game.start_run

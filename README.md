@@ -11,7 +11,7 @@
     -   **Game Speed:** Allow increase game speed up to 16x.
     -   **Remove Animations:** Eliminate in-game animations to speed up game loop in later antes.
     -   **Pause after scoring:** Provides some time to shuffle jokers during scoring
-    -   **Keyboard shortcuts:** Press `A` to toggle Remove Animations and `D` to toggle Pause after scoring during a run. A status strip at the left edge of the screen shows the current state of both. Another mod can move it into a row above one of its own boxes by setting `Saturn.status_ui_dock` (see `core/logic/keybinds.lua`).
+    -   **Keyboard shortcuts:** Press `A` to toggle Remove Animations and `D` to toggle Pause after scoring during a run. A status strip at the left edge of the screen shows the current state of both. Another mod can move it into a row above the right end of one of its own boxes by setting `Saturn.status_ui_dock` (see `core/logic/keybinds.lua`).
 
 -   **Consumable Management**
 
