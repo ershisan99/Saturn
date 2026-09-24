@@ -1,5 +1,8 @@
 -- Keyboard shortcuts: one key per setting toggles it on/off, plus a small
 -- always-visible status strip in the left margin with hover tooltips.
+-- Another mod can move the strip by setting Saturn.status_ui_dock to one of
+-- its UIBoxes before the run starts (or calling Saturn.create_status_ui()
+-- after). The strip then sits in a row centred above that box.
 -- Hooks Controller:key_press_update the same way Fantoms Preview does.
 -- Key names follow LOVE key constants (e.g. "a", "n", "kp1" -> "1").
 
@@ -33,7 +36,7 @@ end
 
 -- Per-frame update for one status icon: recolour and refresh tooltip text.
 G.FUNCS.saturn_status_icon = function(e)
-  if Saturn.status_ui then
+  if Saturn.status_ui and not Saturn.status_ui_dock then
     Saturn.status_ui.alignment.offset.x = status_ui_x()
   end
   local t = e.config.ref_table
@@ -81,14 +84,16 @@ end
 -- The icons sit at the window's left edge, so the default tooltip position
 -- (centred above the element) would be half off screen. Open it to the
 -- right instead, the same way Cartomancer positions its joker popups.
+-- Docked, the icons are at the right edge, so it opens to the left.
 local ui_element_hover_ref = UIElement.hover
 function UIElement:hover()
   if self.config and self.config.saturn_status_icon then
     self.config.h_popup =
       create_popup_UIBox_tooltip(self.config.on_demand_tooltip)
+    local docked = Saturn.status_ui_dock ~= nil
     self.config.h_popup_config = {
-      align = "cr",
-      offset = { x = 0.15, y = 0 },
+      align = docked and "cl" or "cr",
+      offset = { x = docked and -0.15 or 0.15, y = 0 },
       parent = self,
     }
     Node.hover(self)
@@ -105,10 +110,12 @@ function Saturn.create_status_ui()
   if not G.HUD then
     return
   end
-  local rows = {}
+  local dock = Saturn.status_ui_dock
+  -- A column in the narrow margin, a row when docked.
+  local cells = {}
   for _, t in ipairs(toggles) do
-    table.insert(rows, {
-      n = G.UIT.R,
+    table.insert(cells, {
+      n = dock and G.UIT.C or G.UIT.R,
       config = { align = "cm", padding = 0.04 },
       nodes = { status_icon(t) },
     })
@@ -117,10 +124,14 @@ function Saturn.create_status_ui()
     definition = {
       n = G.UIT.ROOT,
       config = { align = "cm", padding = 0.02, colour = G.C.CLEAR },
-      nodes = rows,
+      nodes = cells,
     },
-    -- Vertically centred, in the margin between the window edge and the HUD.
-    config = {
+    config = dock and {
+      align = "tm",
+      offset = { x = 0, y = -0.05 },
+      major = dock,
+    } or {
+      -- Vertically centred, in the margin between the window edge and the HUD.
       align = "cli",
       offset = { x = status_ui_x(), y = 0 },
       major = G.ROOM_ATTACH,
